@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "workspaces": [
+    "site"
+  ],
+  "scripts": {
+    "develop": "npm run develop --workspace=site",
+    "build": "npm run build --workspace site"
+  }
+}
