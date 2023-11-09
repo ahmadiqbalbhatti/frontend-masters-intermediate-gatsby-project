@@ -1,2 +1,6 @@
 [build]
   base = "site"
+  command = "npm run build --workspace=site"
+  publish = "site/dist"
+[dev]
+  targetPort = 8000
