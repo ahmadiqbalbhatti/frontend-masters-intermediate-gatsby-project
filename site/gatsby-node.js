@@ -3,6 +3,7 @@ const { createRemoteFileNode } = require('gatsby-source-filesystem');
 
 const authors = require('./src/data/authors.json');
 const books   = require('./src/data/books.json');
+const slugify = require('slugify');
 
 exports.sourceNodes = ({ actions, createNodeId, createContentDigest }) => {
   const { createNode, createTypes } = actions;
@@ -63,7 +64,7 @@ exports.sourceNodes = ({ actions, createNodeId, createContentDigest }) => {
 
 };
 
-exports.createPages = ({ actions }) => {
+exports.createPages = async ({ actions, graphql }) => {
 
 
   const { createPage } = actions;
@@ -77,6 +78,44 @@ exports.createPages = ({ actions }) => {
       },
     },
   });
+
+  const result = await graphql(`
+    query GetBooks {
+      allBook {
+        nodes {
+          id
+          name
+          series
+        }
+      }
+    }
+  `);
+
+  const books = result.data.allBook.nodes;
+
+  books.forEach((book) => {
+    const bookSlug = slugify(book.name, { lower: true });
+
+    if (book.series === null) {
+      createPage({
+        path     : `/book/${bookSlug}`,
+        component: require.resolve('./src/templates/book.js'),
+        context  : {
+          id: book.id,
+        },
+      });
+    } else {
+      const seriesSlug = slugify(book.series, { lower: true });
+
+      createPage({
+        path     : `/book/${seriesSlug}/${bookSlug}`,
+        component: require.resolve('./src/templates/book.js'),
+        context  : {
+          id: book.id,
+        },
+      });
+    }
+  });
 };
 
 exports.createResolvers = ({
@@ -89,15 +128,14 @@ exports.createResolvers = ({
                            }) => {
   const { createNode } = actions;
 
-
   const resolvers = {
-
     Book: {
       buyLink : {
         type   : 'String',
         resolve: (source) => `https://www.powells.com/searchresults?keyword=${source.isbn}`,
       }, cover: {
-        type: 'File', resolve: async (source) => {
+        type   : 'File',
+        resolve: async (source) => {
           const response = await fetch(`https://openlibrary.org/isbn/${source?.isbn}.json`);
 
           if (!response.ok) {
@@ -106,7 +144,7 @@ exports.createResolvers = ({
           }
 
           const { covers } = await response.json();
-          console.log(covers);
+
           if (covers.length) {
             return createRemoteFileNode({
               url: `https://covers.openlibrary.org/b/id/${covers[0]}-L.jpg`,

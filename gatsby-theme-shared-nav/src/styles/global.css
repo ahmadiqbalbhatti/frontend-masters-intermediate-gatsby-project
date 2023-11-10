@@ -1,0 +1,13 @@
+*{
+    box-sizing: border-box;
+}
+
+html,
+body{
+    color: var(--text);
+    font-family: -apple-system, SansSerif, "Segoe UI", serif;
+    font-size: 19px;
+    line-height: 1.4;
+    margin: 0;
+
+}
