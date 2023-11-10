@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "develop": "npm run develop --workspace=site",
-    "build": "npm run build --workspace=site"
+    "build": "npm run build --workspace=site",
+    "clean": "npm run clean --workspace=site"
   }
 }
