@@ -38,7 +38,7 @@ const Book = ({ data }) => {
 };
 
 export const query = graphql`
-  query ($id: String) {
+  query GetABook($id: String) {
     book(id: {eq: $id}) {
       name
       author {
