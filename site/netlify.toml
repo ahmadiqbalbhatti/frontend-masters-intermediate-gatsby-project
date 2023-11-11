@@ -1,0 +1,3 @@
+[build]
+  command = "npm run build --workspace=site"
+  publish = "public"
