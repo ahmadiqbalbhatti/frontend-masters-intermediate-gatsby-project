@@ -38,8 +38,8 @@ const Book = ({ data }) => {
 };
 
 export const query = graphql`
-  query GetABook($id: String) {
-    book(id: {eq: $id}) {
+    query BookPage($id: String!) {
+    book(id: { eq: $id }) {
       name
       author {
         name
@@ -47,6 +47,7 @@ export const query = graphql`
       }
       series
       seriesOrder
+      buyLink
       cover {
         childImageSharp {
           gatsbyImageData(width: 150)
