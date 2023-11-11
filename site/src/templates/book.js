@@ -8,7 +8,7 @@ import {
   GatsbyImage,
   getImage,
 } from 'gatsby-plugin-image';
-import Link from 'gatsby-link';
+import Link from 'gatsby';
 
 const Book = ({ data }) => {
   const book = data.book;
